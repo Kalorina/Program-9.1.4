@@ -10,7 +10,7 @@ typedef struct{
 
 /* *elem = makro*/ 
 
-MAT* matica(unsigned int rows, unsigned int cols){
+MAT* create_mat(unsigned int rows, unsigned int cols){
 	MAT *matica;
 	
 	/*(*matica).elem = matica->elem*/
@@ -39,13 +39,46 @@ void print(MAT *matica){
 	}
 }
 
+MAT* minor(MAT *matica, unsigned int x, unsigned int y){
+	int i,j;
+	int min_i, min_j;
+	MAT *min;
+	
+	min = create_mat(matica->rows-1,matica->cols-1);
+	
+	for(i=0;i<matica->rows;i++){
+		if (i<x){
+			min_i=i;
+		} 
+		else if (i==x) continue;
+		else {min_i=i-1;}
+		for(j=0;j<matica->cols;j++){
+			if (j<y) {
+				min_j=j;
+			}
+			else if(j==y) continue;
+			else {min_j=j-1;}
+			
+			min->elem[(matica->cols-1)*min_i+min_j]=matica->elem[matica->cols*i+j];
+		}
+	}
+
+	return min;	
+}
+
  
 main(){
 	
 	MAT *ptr;
 		
-	ptr=matica(10,10);	
+	ptr=create_mat(4,4);	
 	print(ptr);
+
+    MAT *min = minor(ptr, 1, 1);
+    print(min);
+
+	free(min->elem);
+	free(min);
 
 	free(ptr->elem);
 	free(ptr);
