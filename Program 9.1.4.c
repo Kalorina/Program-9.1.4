@@ -33,13 +33,21 @@ void print(MAT *matica){
 	
 	for(i=0;i<matica->rows;i++){
 		for(j=0;j<matica->cols;j++){
-			printf("%f", matica->elem[matica->cols*i+j]);
+			printf("%.1f ", matica->elem[matica->cols*i+j]);
 		}
+		printf("\n");
 	}
 }
 
  
 main(){
+	
+	MAT *ptr;
+		
+	ptr=matica(10,10);	
+	print(ptr);
 
+	free(ptr->elem);
+	free(ptr);
 }
 
