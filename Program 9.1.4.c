@@ -8,12 +8,10 @@ typedef struct{
 	float *elem;
 }MAT;
 
-/* *elem = elementy, prvky matice*/ 
 
 MAT* create_mat(unsigned int rows, unsigned int cols){
 	MAT *matica;
 	
-	/*(*matica).elem = matica->elem*/
 	matica = (MAT*) malloc(sizeof(MAT));
 	matica->rows=rows;
 	matica->cols=cols;
@@ -115,10 +113,6 @@ main(){
 	char vystup=0;
 		
 	ptr=create_mat(5,5);	
-//	print(ptr);
-
-//  MAT *min = minor(ptr, 1, 1);
-//  print(min);
     vystup=mat_unimodular(ptr); 
 	print(ptr);
 	
@@ -131,13 +125,7 @@ main(){
 	else {
 		printf("Error.");
 	}
-	 
-//  det=determinant(ptr);
-//  printf("Determinant matice je: %d",det);
-    
-//	free(min->elem);
-//	free(min);
-
+	
 	free(ptr->elem);
 	free(ptr);
 }
