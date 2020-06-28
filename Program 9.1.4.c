@@ -8,7 +8,7 @@ typedef struct{
 	float *elem;
 }MAT;
 
-/* *elem = makro*/ 
+/* *elem = elementy, prvky matice*/ 
 
 MAT* create_mat(unsigned int rows, unsigned int cols){
 	MAT *matica;
@@ -19,12 +19,6 @@ MAT* create_mat(unsigned int rows, unsigned int cols){
 	matica->cols=cols;
 	matica->elem = (float*) malloc((rows*cols) * sizeof(float));
 	
-	int i,n;
-	n=rows*cols;
-	for(i=0;i<n;i++){
-		matica->elem[i]=rand()%9+1;
-	}
-
 	return matica;
 }
 
@@ -93,8 +87,13 @@ int determinant(MAT *matica){
 }
 
 char mat_unimodular(MAT *mat){
-	int det=0;
+	int i,n;
+	n=mat->rows*mat->cols;
+	for(i=0;i<n;i++){
+		mat->elem[i]=rand()%9+1;
+	}
 	
+	int det=0;
 	det=determinant(mat);
 	
 	if(det==1){
@@ -113,21 +112,31 @@ char mat_unimodular(MAT *mat){
 main(){
 	
 	MAT *ptr;
-	int det=0;
+	char vystup=0;
 		
-	ptr=create_mat(4,4);	
+	ptr=create_mat(5,5);	
+//	print(ptr);
+
+//  MAT *min = minor(ptr, 1, 1);
+//  print(min);
+    vystup=mat_unimodular(ptr); 
 	print(ptr);
-
-    MAT *min = minor(ptr, 1, 1);
-//    print(min);
+	
+	if(vystup==0){
+		printf("Matica je unimodularna.");
+	} 
+	else if(vystup==1){
+		printf("Matica nie je unimodularna.");
+	}
+	else {
+		printf("Error.");
+	}
+	 
+//  det=determinant(ptr);
+//  printf("Determinant matice je: %d",det);
     
-    det=determinant(ptr);
-    printf("Determinant matice je: %d",det);
-    
-    mat_unimodular(ptr);
-
-	free(min->elem);
-	free(min);
+//	free(min->elem);
+//	free(min);
 
 	free(ptr->elem);
 	free(ptr);
