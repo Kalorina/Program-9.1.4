@@ -91,20 +91,40 @@ int determinant(MAT *matica){
 	}
 	return det;
 }
+
+char mat_unimodular(MAT *mat){
+	int det=0;
+	
+	det=determinant(mat);
+	
+	if(det==1){
+		return 0;
+	}
+	else{
+		if(det==-1){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+	}
+}
  
 main(){
 	
 	MAT *ptr;
-	int a=0;
+	int det=0;
 		
-	ptr=create_mat(3,3);	
+	ptr=create_mat(4,4);	
 	print(ptr);
 
     MAT *min = minor(ptr, 1, 1);
-    print(min);
+//    print(min);
     
-    a=determinant(ptr);
-    printf("Determinant matice je: %d",a);
+    det=determinant(ptr);
+    printf("Determinant matice je: %d",det);
+    
+    mat_unimodular(ptr);
 
 	free(min->elem);
 	free(min);
