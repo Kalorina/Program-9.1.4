@@ -66,16 +66,45 @@ MAT* minor(MAT *matica, unsigned int x, unsigned int y){
 	return min;	
 }
 
+int determinant(MAT *matica){
+	int i,j;
+	int fix=0;
+	int det=0;
+	
+	if(matica->rows!=matica->cols){
+		printf("Matica nieje stvorcova, nemoze byt unimodularna.");
+	}
+	else{
+		if(matica->rows==1){
+			det=matica->elem[0];
+		}
+		else{
+			if(matica->rows==2){
+				det=matica->elem[0]*matica->elem[3]-matica->elem[1]*matica->elem[2];
+			}
+			else{
+				for(i=0;i<matica->rows;i++){
+					det+=pow(-1,fix+i)*matica->elem[i]*determinant(minor(matica,fix,i));	
+				}	
+			}
+		}
+	}
+	return det;
+}
  
 main(){
 	
 	MAT *ptr;
+	int a=0;
 		
-	ptr=create_mat(4,4);	
+	ptr=create_mat(3,3);	
 	print(ptr);
 
     MAT *min = minor(ptr, 1, 1);
     print(min);
+    
+    a=determinant(ptr);
+    printf("Determinant matice je: %d",a);
 
 	free(min->elem);
 	free(min);
