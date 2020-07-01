@@ -9,74 +9,106 @@ typedef struct{
 }MAT;
 
 
-MAT* create_mat(unsigned int rows, unsigned int cols){
-	MAT *matica;
+MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
+	MAT *mat;
 	
-	matica = (MAT*) malloc(sizeof(MAT));
-	matica->rows=rows;
-	matica->cols=cols;
-	matica->elem = (float*) malloc((rows*cols) * sizeof(float));
+	mat = (MAT*) malloc(sizeof(MAT));
+	mat->rows=rows;
+	mat->cols=cols;
+	mat->elem = (float*) malloc((rows*cols) * sizeof(float));
 	
-	return matica;
+	if( mat == NULL ){
+		return (void *)1;
+	}
+	
+	if(mat->elem == NULL){
+		return (void *)1;
+	}
+	
+	return mat;
 }
 
-void print(MAT *matica){
+void mat_print(MAT *mat){
 	int i,j;
 	
-	for(i=0;i<matica->rows;i++){
-		for(j=0;j<matica->cols;j++){
-			printf("%.1f ", matica->elem[matica->cols*i+j]);
+	for(i=0;i<mat->rows;i++){
+		for(j=0;j<mat->cols;j++){
+			printf("%.1f ", mat->elem[mat->cols*i+j]);
 		}
 		printf("\n");
 	}
 }
 
-MAT* minor(MAT *matica, unsigned int x, unsigned int y){
+void mat_unit(MAT *mat){
+	int i,j;
+	
+	for(i=0;i<mat->rows;i++){
+		for(j=0;j<mat->cols;j++){
+			if(i==j){
+				mat->elem[mat->cols*i+j]=1;	
+			}
+			else{
+				mat->elem[mat->cols*i+j]=0;	
+			}
+		}
+	}
+	
+}
+
+void mat_random(MAT *mat){
+ 	int i,n;
+	n=mat->rows*mat->cols;
+	for(i=0;i<n;i++){
+		mat->elem[i]=rand()%3-1;
+	}
+ }
+
+MAT* mat_minor(MAT *mat, unsigned int x, unsigned int y){
 	int i,j;
 	int min_i, min_j;
 	MAT *min;
 	
-	min = create_mat(matica->rows-1,matica->cols-1);
+	min = mat_create_with_type(mat->rows-1,mat->cols-1);
 	
-	for(i=0;i<matica->rows;i++){
+	for(i=0;i<mat->rows;i++){
 		if (i<x){
 			min_i=i;
 		} 
 		else if (i==x) continue;
 		else {min_i=i-1;}
-		for(j=0;j<matica->cols;j++){
+		for(j=0;j<mat->cols;j++){
 			if (j<y) {
 				min_j=j;
 			}
 			else if(j==y) continue;
 			else {min_j=j-1;}
 			
-			min->elem[(matica->cols-1)*min_i+min_j]=matica->elem[matica->cols*i+j];
+			min->elem[(mat->cols-1)*min_i+min_j]=mat->elem[mat->cols*i+j];
 		}
 	}
 
 	return min;	
 }
 
-int determinant(MAT *matica){
+int determinant(MAT *mat){
 	int i,j;
 	int fix=0;
 	int det=0;
 	
-	if(matica->rows!=matica->cols){
-		printf("Matica nieje stvorcova, nemoze byt unimodularna.");
+	if(mat->rows!=mat->cols){
+		return 1;
 	}
 	else{
-		if(matica->rows==1){
-			det=matica->elem[0];
+		if(mat->rows==1){
+			det=mat->elem[0];
 		}
 		else{
-			if(matica->rows==2){
-				det=matica->elem[0]*matica->elem[3]-matica->elem[1]*matica->elem[2];
+			if(mat->rows==2){
+				det = mat->elem[0]*mat->elem[3]-mat->elem[1]*mat->elem[2];
 			}
 			else{
-				for(i=0;i<matica->rows;i++){
-					det+=pow(-1,fix+i)*matica->elem[i]*determinant(minor(matica,fix,i));	
+				for(i=0;i<mat->rows;i++){
+					det += pow(-1,fix+i)*mat->elem[i]*determinant(mat_minor(mat,fix,i));	
 				}	
 			}
 		}
@@ -84,11 +116,11 @@ int determinant(MAT *matica){
 	return det;
 }
 
-char mat_unimodular(MAT *mat){
+char mat_create_random_unimodular(MAT *mat){
 	int i,n;
 	n=mat->rows*mat->cols;
 	for(i=0;i<n;i++){
-		mat->elem[i]=rand()%9+1;
+		mat->elem[i]=rand()%3-1;
 	}
 	
 	int det=0;
@@ -112,9 +144,9 @@ main(){
 	MAT *ptr;
 	char vystup=0;
 		
-	ptr=create_mat(5,5);	
-    vystup=mat_unimodular(ptr); 
-	print(ptr);
+	ptr = mat_create_with_type(5,5);	
+    vystup=mat_create_random_unimodular(ptr); 
+	mat_print(ptr);
 	
 	if(vystup==0){
 		printf("Matica je unimodularna.");
@@ -128,5 +160,6 @@ main(){
 	
 	free(ptr->elem);
 	free(ptr);
+
 }
 
